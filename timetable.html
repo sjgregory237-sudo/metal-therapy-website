@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timetable | Metal Therapy CrossFit — Brooklyn, VIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cold-bg: 10,10,10;
+    --faint: rgba(245,243,238,0.55);
+    --muted: rgba(245,243,238,0.75);
+    --off-white: #F3EFE8;
+    --accent: #3E7EA6;
+    --accent-muted: #2C5A74;
+    --accent-light: #6FA8C9;
+    --line: rgba(243,239,232,0.14);
+    --card: rgba(255,255,255,0.03);
+
+    --display: 'Anton', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    color:var(--off-white);
+    background: rgb(var(--cold-bg));
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  h1,h2,h3{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:.96;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+    padding:16px 30px;border-radius:2px;
+    border:1px solid var(--off-white);
+    transition:all .25s ease;
+    cursor:pointer;
+    background:transparent;
+    color:var(--off-white);
+  }
+  .btn:hover{background:var(--off-white);color:#0A0A0A;}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#0E1B22;font-weight:600;}
+  .btn.primary:hover{background:var(--off-white);border-color:var(--off-white);}
+
+  /* ---------------- NAV ---------------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 32px;
+    background:rgba(10,10,10,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:var(--display);font-size:20px;letter-spacing:.02em;line-height:1;}
+  .logo .sub{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--accent);margin-top:4px;text-transform:uppercase;}
+  .navlinks{display:flex;gap:34px;align-items:center;}
+  .navlinks a{
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);
+  }
+  .navlinks a:hover, .navlinks a.active{color:var(--off-white);}
+  .navlinks a.cta{
+    color:#0A0A0A;background:var(--accent);padding:10px 18px;border-radius:2px;font-weight:600;
+  }
+  .navlinks a.cta:hover{background:var(--off-white);}
+  .burger{display:none;background:none;border:0;color:var(--off-white);font-size:22px;}
+
+  /* ---------------- PAGE HEADER ---------------- */
+  .page-header{
+    padding:180px 0 60px;text-align:center;
+    background:linear-gradient(180deg, rgba(62,126,166,.08), transparent);
+  }
+  .page-header h1{font-size:clamp(44px,7vw,84px);}
+  .page-header h1 em{font-style:normal;color:var(--accent);display:block;}
+  .page-header p{color:var(--muted);font-size:17px;max-width:520px;margin:22px auto 34px;line-height:1.7;}
+
+  /* ---------------- LEGEND ---------------- */
+  .legend{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;padding:0 0 50px;}
+  .legend-item{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+  .dot.cf{background:var(--accent);}
+  .dot.sc{background:var(--accent-muted);}
+  .dot.oly{background:var(--accent-light);}
+  .dot.gym{background:#7C8A93;}
+  .dot.hx{background:#4A5A64;}
+  .dot.og{background:transparent;border:1px solid var(--off-white);}
+
+  /* ---------------- TIMETABLE ---------------- */
+  .tt-section{padding:0 0 100px;}
+  .tt-scroll{overflow-x:auto;border:1px solid var(--line);}
+  table{width:100%;border-collapse:collapse;min-width:820px;}
+  thead th{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    padding:18px 14px;text-align:left;border-bottom:1px solid var(--line);background:rgba(62,126,166,.05);
+    white-space:nowrap;
+  }
+  thead th:first-child{color:var(--faint);}
+  tbody td{
+    padding:14px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody td:last-child{border-right:0;}
+  tbody tr:last-child td{border-bottom:0;}
+  .time-cell{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap;
+    background:rgba(255,255,255,.015);
+  }
+  .class-tag{
+    display:block;padding:9px 10px;border-radius:2px;
+    font-family:var(--body);font-weight:600;font-size:12.5px;
+    color:var(--off-white);
+    border-left:3px solid transparent;
+    background:rgba(255,255,255,.03);
+  }
+  .class-tag.cf{border-left-color:var(--accent);}
+  .class-tag.sc{border-left-color:var(--accent-muted);}
+  .class-tag.oly{border-left-color:var(--accent-light);}
+  .class-tag.gym{border-left-color:#7C8A93;}
+  .class-tag.hx{border-left-color:#4A5A64;}
+  .class-tag.og{border-left-color:var(--off-white);color:var(--muted);}
+  .class-tag span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-top:3px;font-weight:400;}
+  .empty-cell{color:var(--faint);font-family:var(--mono);font-size:12px;}
+
+  .tt-note{
+    text-align:center;color:var(--faint);font-family:var(--mono);font-size:12px;
+    margin-top:26px;line-height:1.8;
+  }
+
+  /* ---------------- CTA BAND ---------------- */
+  .cta-band{
+    padding:100px 0;text-align:center;
+    background:radial-gradient(ellipse at center, rgba(62,126,166,.14), transparent 70%);
+  }
+  .cta-band h2{font-size:clamp(34px,5.6vw,60px);max-width:800px;margin:0 auto;}
+  .cta-band h2 em{font-style:normal;color:var(--accent);display:block;}
+  .cta-band p{color:var(--muted);font-size:16px;margin:20px auto 32px;max-width:480px;}
+
+  /* ---------------- FOOTER ---------------- */
+  footer{border-top:1px solid var(--line);padding:36px 0;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
+  .foot-links{display:flex;gap:28px;flex-wrap:wrap;}
+  .foot-links a{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .foot-links a:hover{color:var(--off-white);}
+  .foot-copy{
+    font-family:var(--mono);font-size:11px;color:var(--faint);
+    padding-top:24px;margin-top:24px;border-top:1px solid var(--line);
+  }
+
+  @media (max-width:980px){
+    .navlinks{display:none;}
+    .burger{display:block;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px;}
+    .page-header{padding:150px 0 44px;}
+  }
+
+  ::selection{background:var(--accent);color:#0A0A0A;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="logo">METAL THERAPY<span class="sub">CrossFit</span></div>
+  <div class="navlinks">
+    <a href="index.html#offer">Why Us</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#coaches">Coaches</a>
+    <a href="timetable.html" class="active">Timetable</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#contact" class="cta">Free Trial</a>
+  </div>
+  <button class="burger" aria-label="Menu">☰</button>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1>WEEKLY<em>TIMETABLE</em></h1>
+    <p>Every class is coached and every movement is scalable, pick the sessions that fits your week and show up whenever suits you.</p>
+    <a href="index.html#contact" class="btn primary">Start your 7 day free trial</a>
+  </div>
+</header>
+
+<section class="legend">
+  <div class="legend-item"><span class="dot cf"></span>CrossFit</div>
+  <div class="legend-item"><span class="dot oly"></span>Olympic Lifting</div>
+  <div class="legend-item"><span class="dot gym"></span>CrossFit Gymnastics</div>
+  <div class="legend-item"><span class="dot hx"></span>Hybrid X</div>
+  <div class="legend-item"><span class="dot og"></span>Open Gym</div>
+</section>
+
+<section class="tt-section">
+  <div class="wrap">
+    <div class="tt-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="time-cell">5:00 AM</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">6:00 AM</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag oly">Olympic Lifting</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">7:00 AM</td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag og">Open Gym</div></td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">8:00 AM</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag hx">Hybrid X</div></td>
+          </tr>
+          <tr>
+            <td class="time-cell">8:30 AM</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">9:15 AM</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">5:00 PM</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="time-cell">6:00 PM</td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag gym">CrossFit Gymnastics</div></td>
+            <td><div class="class-tag cf">CrossFit</div></td>
+            <td><div class="class-tag oly">Olympic Lifting</div></td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tt-note">Times shown reflect our current weekly schedule and are subject to change.<br>Closed public holidays. Please arrive 5 minutes before class start.</p>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2>Ready to find<em>your session?</em></h2>
+    <p>No lock-in, no pressure — just turn up and train with us for a week, on the house.</p>
+    <a href="index.html#contact" class="btn primary">Start your 7 day free trial</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="logo">METAL THERAPY<span class="sub">CrossFit &middot; Brooklyn VIC</span></div>
+      <div class="foot-links">
+        <a href="index.html#hero">Hero</a>
+        <a href="index.html#offer">Why Us</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#coaches">Coaches</a>
+        <a href="timetable.html">Timetable</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <a href="index.html#contact" class="btn primary">Start your 7 day free trial</a>
+    </div>
+    <div class="foot-copy">© 2026 Metal Therapy CrossFit. All rights reserved. Unit 29/650 Geelong Rd, Brooklyn VIC 3012.</div>
+  </div>
+</footer>
+
+</body>
+</html>
