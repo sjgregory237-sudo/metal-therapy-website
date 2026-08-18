@@ -97,7 +97,8 @@
   /* ---------------- TIMETABLE ---------------- */
   .tt-section{padding:0 0 100px;}
   .tt-scroll{overflow-x:auto;border:1px solid var(--line);}
-  table{width:100%;border-collapse:collapse;min-width:820px;}
+  table{width:100%;border-collapse:collapse;min-width:820px;table-layout:fixed;}
+  col.time-col{width:120px;}
   thead th{
     font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
     padding:18px 14px;text-align:left;border-bottom:1px solid var(--line);background:rgba(62,126,166,.05);
@@ -115,18 +116,19 @@
     background:rgba(255,255,255,.015);
   }
   .class-tag{
-    display:block;padding:9px 10px;border-radius:2px;
-    font-family:var(--body);font-weight:600;font-size:12.5px;
+    display:flex;align-items:center;height:52px;box-sizing:border-box;
+    padding:6px 12px;border-radius:2px;
+    font-family:var(--body);font-weight:600;font-size:12px;line-height:1.25;
     color:var(--off-white);
-    border-left:3px solid transparent;
+    border-left:4px solid transparent;
     background:rgba(255,255,255,.03);
   }
-  .class-tag.cf{border-left-color:var(--accent);}
-  .class-tag.sc{border-left-color:var(--accent-muted);}
-  .class-tag.oly{border-left-color:var(--accent-light);}
-  .class-tag.gym{border-left-color:#7C8A93;}
-  .class-tag.hx{border-left-color:#4A5A64;}
-  .class-tag.og{border-left-color:var(--off-white);color:var(--muted);}
+  .class-tag.cf{border-left-color:var(--accent);background:rgba(62,126,166,.18);}
+  .class-tag.sc{border-left-color:var(--accent-muted);background:rgba(44,90,116,.22);}
+  .class-tag.oly{border-left-color:var(--accent-light);background:rgba(111,168,201,.20);}
+  .class-tag.gym{border-left-color:#7C8A93;background:rgba(124,138,147,.18);}
+  .class-tag.hx{border-left-color:#4A5A64;background:rgba(74,90,100,.24);}
+  .class-tag.og{border-left-color:var(--off-white);background:rgba(243,239,232,.09);}
   .class-tag span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-top:3px;font-weight:400;}
   .empty-cell{color:var(--faint);font-family:var(--mono);font-size:12px;}
 
@@ -203,6 +205,10 @@
   <div class="wrap">
     <div class="tt-scroll">
       <table>
+        <colgroup>
+          <col class="time-col">
+          <col><col><col><col><col><col><col>
+        </colgroup>
         <thead>
           <tr>
             <th>Time</th>
@@ -299,7 +305,7 @@
         </tbody>
       </table>
     </div>
-    <p class="tt-note">Times shown reflect our current weekly schedule and are subject to change.<br>Closed public holidays. Please arrive 5 minutes before class start.</p>
+    <p class="tt-note">Times shown reflect our current weekly schedule and are subject to change.</p>
   </div>
 </section>
 
