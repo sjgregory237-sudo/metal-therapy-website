@@ -539,8 +539,10 @@
 <div class="modal-overlay" id="trial">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="trial-heading">
     <button type="button" class="modal-close" id="trial-close" aria-label="Close">&times;</button>
-    <h3 id="trial-heading">CLAIM YOUR<em>7 DAY FREE TRIAL</em></h3>
-    <p class="modal-sub">No lock-in, no pressure — just fill in your details and we'll get you booked into a class.</p>
+    <div id="trial-intro">
+      <h3 id="trial-heading">CLAIM YOUR<em>7 DAY FREE TRIAL</em></h3>
+      <p class="modal-sub">No lock-in, no pressure — just fill in your details and we'll get you booked into a class.</p>
+    </div>
     <form id="trial-form" name="trial" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="trial">
       <p class="hp-field"><label>Leave this field blank<input name="bot-field"></label></p>
@@ -623,6 +625,7 @@
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname + window.location.search);
     setTimeout(() => {
+      document.getElementById('trial-intro').hidden = false;
       trialForm.hidden = false;
       document.getElementById('trial-success').hidden = true;
       trialForm.reset();
@@ -647,6 +650,7 @@
   trialForm.addEventListener('submit', (e) => {
     e.preventDefault();
     submitNetlifyForm(trialForm, () => {
+      document.getElementById('trial-intro').hidden = true;
       trialForm.hidden = true;
       document.getElementById('trial-success').hidden = false;
     });
