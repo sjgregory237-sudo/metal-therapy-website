@@ -192,7 +192,7 @@
   .coach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:44px;}
   .coach-tile{text-align:left;}
   .coach-photo{
-    aspect-ratio:3/4;
+    aspect-ratio:1/1;
     background:linear-gradient(160deg,#232323,#141414);
     border-left:3px solid var(--accent);
     display:flex;align-items:center;justify-content:center;
@@ -257,6 +257,30 @@
     padding-top:24px;margin-top:24px;border-top:1px solid var(--line);
   }
 
+  /* ---------------- TRIAL MODAL ---------------- */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:300;
+    display:none;align-items:center;justify-content:center;
+    background:rgba(6,6,8,.86);
+    backdrop-filter:blur(6px);
+    padding:24px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    position:relative;width:100%;max-width:440px;
+    background:rgb(14,14,14);border:1px solid var(--line);
+    padding:44px 36px 36px;
+  }
+  .modal-close{
+    position:absolute;top:14px;right:14px;
+    background:none;border:0;color:var(--faint);
+    font-family:var(--mono);font-size:22px;line-height:1;cursor:pointer;padding:8px;
+  }
+  .modal-close:hover{color:var(--off-white);}
+  .modal-box h3{font-size:clamp(26px,5vw,34px);margin-bottom:10px;}
+  .modal-box h3 em{font-style:normal;color:var(--accent);display:block;}
+  .modal-sub{color:var(--muted);font-size:14.5px;line-height:1.6;margin-bottom:28px;}
+
   /* ---------------- RESPONSIVE ---------------- */
   @media (max-width:980px){
     .navlinks{display:none;}
@@ -289,7 +313,7 @@
     <a href="#coaches">Coaches</a>
     <a href="timetable.html">Timetable</a>
     <a href="#contact">Contact</a>
-    <a href="#contact" class="cta">Free Trial</a>
+    <a href="#trial" class="cta">Free Trial</a>
   </div>
   <button class="burger" aria-label="Menu">☰</button>
 </nav>
@@ -299,7 +323,7 @@
     <h1>FORGING<br><em>STRONGER</em><br>HUMANS.</h1>
     <p class="hero-sub">A community-driven CrossFit gym in Brooklyn dedicated to your physical and mental evolution.</p>
     <div class="hero-ctas">
-      <a href="#contact" class="btn primary">Start your 7 day free trial</a>
+      <a href="#trial" class="btn primary">Start your 7 day free trial</a>
     </div>
   </div>
 </header>
@@ -368,7 +392,7 @@
         <p>An inclusive environment where our community is just as important as physical gains. We show up for each other.</p>
       </div>
     </div>
-    <a href="#contact" class="btn primary">Start your 7 day free trial</a>
+    <a href="#trial" class="btn primary">Start your 7 day free trial</a>
   </div>
 </section>
 
@@ -447,7 +471,7 @@
         <h3>Shaun</h3><span>Weightlifting Coach</span>
       </div>
     </div>
-    <a href="#contact" class="btn primary">Start your 7 day free trial</a>
+    <a href="#trial" class="btn primary">Start your 7 day free trial</a>
   </div>
 </section>
 
@@ -497,11 +521,26 @@
         <a href="timetable.html">Timetable</a>
         <a href="#contact">Contact</a>
       </div>
-      <a href="#contact" class="btn primary">Start your 7 day free trial</a>
+      <a href="#trial" class="btn primary">Start your 7 day free trial</a>
     </div>
     <div class="foot-copy">© 2026 Metal Therapy CrossFit. All rights reserved. Unit 29/650 Geelong Rd, Brooklyn VIC 3012.</div>
   </div>
 </footer>
+
+<div class="modal-overlay" id="trial">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="trial-heading">
+    <button type="button" class="modal-close" id="trial-close" aria-label="Close">&times;</button>
+    <h3 id="trial-heading">CLAIM YOUR<em>7 DAY FREE TRIAL</em></h3>
+    <p class="modal-sub">No lock-in, no pressure — just fill in your details and we'll get you booked into a class.</p>
+    <form id="trial-form">
+      <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="Your Name" required></div>
+      <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required></div>
+      <div class="field"><label>Phone Number</label><input type="tel" name="phone" placeholder="04xx xxx xxx" required></div>
+      <button type="submit" class="btn primary" style="width:100%;justify-content:center;">Claim My Free Trial</button>
+      <p class="form-note">This opens your email client addressed to info@metaltherapy.com.au — swap in a real form service (e.g. Netlify Forms) once live.</p>
+    </form>
+  </div>
+</div>
 
 <script>
   // nav shrink on scroll
@@ -540,6 +579,46 @@
     const subject = encodeURIComponent('Free trial enquiry — ' + (data.get('name') || ''));
     const body = encodeURIComponent(
       `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone')}\n\n${data.get('message')}`
+    );
+    window.location.href = `mailto:info@metaltherapy.com.au?subject=${subject}&body=${body}`;
+  });
+
+  // trial signup modal
+  const trialModal = document.getElementById('trial');
+  const trialForm = document.getElementById('trial-form');
+
+  function openTrialModal(){
+    trialModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    history.replaceState(null, '', '#trial');
+  }
+  function closeTrialModal(){
+    trialModal.classList.remove('open');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
+  document.querySelectorAll('a[href="#trial"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      openTrialModal();
+    });
+  });
+  document.getElementById('trial-close').addEventListener('click', closeTrialModal);
+  trialModal.addEventListener('click', (e) => {
+    if(e.target === trialModal) closeTrialModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && trialModal.classList.contains('open')) closeTrialModal();
+  });
+  if(window.location.hash === '#trial') openTrialModal();
+
+  trialForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(trialForm);
+    const subject = encodeURIComponent('7 Day Free Trial Signup — ' + (data.get('name') || ''));
+    const body = encodeURIComponent(
+      `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone')}\n\nI'd like to claim my 7 day free trial at Metal Therapy CrossFit.`
     );
     window.location.href = `mailto:info@metaltherapy.com.au?subject=${subject}&body=${body}`;
   });
