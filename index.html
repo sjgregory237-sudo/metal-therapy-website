@@ -245,6 +245,9 @@
   .field input:focus,.field textarea:focus{outline:1px solid var(--accent);border-color:var(--accent);}
   .field textarea{resize:vertical;min-height:100px;}
   .form-note{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:10px;}
+  .hp-field{position:absolute;left:-9999px;top:-9999px;}
+  .form-success h4{font-family:var(--display);font-weight:400;font-size:26px;text-transform:uppercase;color:var(--off-white);margin-bottom:10px;}
+  .form-success p{color:var(--muted);font-size:15px;line-height:1.7;}
 
   /* ---------------- FOOTER ---------------- */
   footer{border-top:1px solid var(--line);padding:36px 0;}
@@ -497,14 +500,20 @@
     </div>
     <div class="get-in-touch">
       <h4 class="form-head">Get In Touch</h4>
-      <form id="contact-form">
+      <form id="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact">
+        <p class="hp-field"><label>Leave this field blank<input name="bot-field"></label></p>
         <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="Your Name" required></div>
         <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required></div>
         <div class="field"><label>Phone Number</label><input type="tel" name="phone" placeholder="04xx xxx xxx"></div>
         <div class="field"><label>Message (Optional)</label><textarea name="message" placeholder="Any questions or goals you'd like to share..."></textarea></div>
         <button type="submit" class="btn primary" style="width:100%;justify-content:center;">Send Message</button>
-        <p class="form-note">This opens your email client addressed to info@metaltherapy.com.au — swap in a real form service (e.g. Netlify Forms) once live.</p>
+        <p class="form-note">We'll get back to you within one business day.</p>
       </form>
+      <div class="form-success" id="contact-success" hidden>
+        <h4>Message sent.</h4>
+        <p>Thanks for reaching out — we'll be in touch shortly.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -532,13 +541,19 @@
     <button type="button" class="modal-close" id="trial-close" aria-label="Close">&times;</button>
     <h3 id="trial-heading">CLAIM YOUR<em>7 DAY FREE TRIAL</em></h3>
     <p class="modal-sub">No lock-in, no pressure — just fill in your details and we'll get you booked into a class.</p>
-    <form id="trial-form">
+    <form id="trial-form" name="trial" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="trial">
+      <p class="hp-field"><label>Leave this field blank<input name="bot-field"></label></p>
       <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="Your Name" required></div>
       <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required></div>
       <div class="field"><label>Phone Number</label><input type="tel" name="phone" placeholder="04xx xxx xxx" required></div>
       <button type="submit" class="btn primary" style="width:100%;justify-content:center;">Claim My Free Trial</button>
-      <p class="form-note">This opens your email client addressed to info@metaltherapy.com.au — swap in a real form service (e.g. Netlify Forms) once live.</p>
+      <p class="form-note">We'll be in touch to get you booked into a class.</p>
     </form>
+    <div class="form-success" id="trial-success" hidden>
+      <h4>Request sent.</h4>
+      <p>We've got your details — we'll be in touch shortly to get you booked in.</p>
+    </div>
   </div>
 </div>
 
@@ -571,16 +586,27 @@
   window.addEventListener('scroll', updateTemperature, {passive:true});
   updateTemperature();
 
-  // contact form -> mailto fallback (static prototype, no backend)
+  // Netlify Forms submission (AJAX, no mail client, no backend)
+  function submitNetlifyForm(form, onSuccess){
+    const data = new URLSearchParams(new FormData(form)).toString();
+    fetch('/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: data
+    })
+    .then(() => onSuccess())
+    .catch(() => {
+      alert("Sorry, something went wrong sending that. Please call us on 0414 213 831 or email info@metaltherapy.com.au.");
+    });
+  }
+
   const form = document.getElementById('contact-form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const data = new FormData(form);
-    const subject = encodeURIComponent('Free trial enquiry — ' + (data.get('name') || ''));
-    const body = encodeURIComponent(
-      `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone')}\n\n${data.get('message')}`
-    );
-    window.location.href = `mailto:info@metaltherapy.com.au?subject=${subject}&body=${body}`;
+    submitNetlifyForm(form, () => {
+      form.hidden = true;
+      document.getElementById('contact-success').hidden = false;
+    });
   });
 
   // trial signup modal
@@ -596,6 +622,11 @@
     trialModal.classList.remove('open');
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname + window.location.search);
+    setTimeout(() => {
+      trialForm.hidden = false;
+      document.getElementById('trial-success').hidden = true;
+      trialForm.reset();
+    }, 300);
   }
 
   document.querySelectorAll('a[href="#trial"]').forEach((a) => {
@@ -615,12 +646,10 @@
 
   trialForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const data = new FormData(trialForm);
-    const subject = encodeURIComponent('7 Day Free Trial Signup — ' + (data.get('name') || ''));
-    const body = encodeURIComponent(
-      `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone')}\n\nI'd like to claim my 7 day free trial at Metal Therapy CrossFit.`
-    );
-    window.location.href = `mailto:info@metaltherapy.com.au?subject=${subject}&body=${body}`;
+    submitNetlifyForm(trialForm, () => {
+      trialForm.hidden = true;
+      document.getElementById('trial-success').hidden = false;
+    });
   });
 </script>
 
