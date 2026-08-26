@@ -88,10 +88,10 @@
   .legend-item{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
   .dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
   .dot.cf{background:var(--accent);}
-  .dot.sc{background:var(--accent-muted);}
-  .dot.oly{background:var(--accent-light);}
-  .dot.gym{background:#7C8A93;}
-  .dot.hx{background:#4A5A64;}
+  .dot.sc{background:#8B6FC9;}
+  .dot.oly{background:#C99A4A;}
+  .dot.gym{background:#4FA383;}
+  .dot.hx{background:#C1614A;}
   .dot.og{background:transparent;border:1px solid var(--off-white);}
 
   /* ---------------- TIMETABLE ---------------- */
@@ -124,10 +124,10 @@
     background:rgba(255,255,255,.03);
   }
   .class-tag.cf{border-left-color:var(--accent);background:rgba(62,126,166,.18);}
-  .class-tag.sc{border-left-color:var(--accent-muted);background:rgba(44,90,116,.22);}
-  .class-tag.oly{border-left-color:var(--accent-light);background:rgba(111,168,201,.20);}
-  .class-tag.gym{border-left-color:#7C8A93;background:rgba(124,138,147,.18);}
-  .class-tag.hx{border-left-color:#4A5A64;background:rgba(74,90,100,.24);}
+  .class-tag.sc{border-left-color:#8B6FC9;background:rgba(139,111,201,.20);}
+  .class-tag.oly{border-left-color:#C99A4A;background:rgba(201,154,74,.20);}
+  .class-tag.gym{border-left-color:#4FA383;background:rgba(79,163,131,.20);}
+  .class-tag.hx{border-left-color:#C1614A;background:rgba(193,97,74,.20);}
   .class-tag.og{border-left-color:var(--off-white);background:rgba(243,239,232,.09);}
   .class-tag span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-top:3px;font-weight:400;}
   .empty-cell{color:var(--faint);font-family:var(--mono);font-size:12px;}
@@ -160,6 +160,15 @@
   @media (max-width:980px){
     .navlinks{display:none;}
     .burger{display:block;}
+    .navlinks.open{
+      display:flex;position:absolute;top:100%;left:0;right:0;
+      flex-direction:column;align-items:stretch;gap:0;
+      background:rgba(10,10,10,.97);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+      padding:8px 32px 26px;
+    }
+    .navlinks.open a{padding:15px 0;border-bottom:1px solid var(--line);font-size:14px;}
+    .navlinks.open a.cta{margin-top:16px;justify-content:center;padding:14px 18px;border-bottom:0;}
   }
   @media (max-width:560px){
     .wrap{padding:0 20px;}
@@ -334,6 +343,29 @@
     <div class="foot-copy">© 2026 Metal Therapy CrossFit. All rights reserved. Unit 29/650 Geelong Rd, Brooklyn VIC 3012.</div>
   </div>
 </footer>
+
+<script>
+  // mobile burger menu
+  const burger = document.querySelector('.burger');
+  const navlinksEl = document.querySelector('.navlinks');
+  function closeBurgerMenu(){
+    navlinksEl.classList.remove('open');
+    burger.setAttribute('aria-expanded','false');
+    burger.textContent = '☰';
+  }
+  burger.setAttribute('aria-expanded','false');
+  burger.addEventListener('click', () => {
+    const isOpen = navlinksEl.classList.toggle('open');
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    burger.textContent = isOpen ? '✕' : '☰';
+  });
+  navlinksEl.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', closeBurgerMenu);
+  });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && navlinksEl.classList.contains('open')) closeBurgerMenu();
+  });
+</script>
 
 </body>
 </html>
