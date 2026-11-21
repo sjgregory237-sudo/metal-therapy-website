@@ -163,8 +163,9 @@
 
   /* ---------------- HERO ---------------- */
   .hero{
-    position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
-    padding:0 0 70px;
+    --hero-h:max(100svh, 77.8vw); /* tall enough to show the whole photo */
+    position:relative;min-height:var(--hero-h);display:flex;flex-direction:column;justify-content:flex-start;
+    padding:calc(var(--hero-h) * .27) 0 70px; /* headline starts just below the MT logo */
     background:#0A0A0A;
     overflow:hidden;
   }
@@ -178,7 +179,7 @@
   }
   .hero::after{
     content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.18) 45%, rgba(10,10,10,.55) 78%, rgba(10,10,10,.85) 100%);
+    background:linear-gradient(180deg, rgba(10,10,10,.3) 0%, rgba(10,10,10,.38) 45%, rgba(10,10,10,.6) 75%, rgba(10,10,10,.9) 100%);
   }
   .hero-inner{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;}
   .hero h1{font-size:clamp(52px, 8.5vw, 124px);max-width:900px;text-shadow:0 2px 28px rgba(0,0,0,.35);}
