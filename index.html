@@ -163,29 +163,28 @@
 
   /* ---------------- HERO ---------------- */
   .hero{
-    --hero-h:max(100svh, 77.8vw); /* tall enough to show the whole photo */
-    position:relative;min-height:var(--hero-h);display:flex;flex-direction:column;justify-content:flex-start;
-    padding:calc(var(--hero-h) * .27) 0 70px; /* headline starts just below the MT logo */
+    position:relative;display:flex;flex-direction:column;justify-content:center;
+    aspect-ratio:2/1;min-height:640px;
+    padding:96px 0 48px; /* clears the fixed nav */
     background:#0A0A0A;
     overflow:hidden;
   }
-  /* Photo is sized so its focal point (the MT logo / gap in the wall stripes, ~55.5% across)
-     sits dead centre behind the headline, with the logo kept at the top of the frame. */
+  /* Photo is anchored to the bottom and the top ~28% is cropped away, so the MT logo
+     above the group is out of frame and the hero is all people. */
   .hero::before{
-    content:"";position:absolute;z-index:0;top:0;bottom:0;left:50%;
-    aspect-ratio:2000/1377;min-width:113%;
-    transform:translateX(-55.5%);
-    background:url('hero-team.jpg') 55.5% 0% /cover no-repeat;
+    content:"";position:absolute;z-index:0;left:0;right:0;bottom:0;top:-38%;
+    background:url('hero-team.jpg') 52% 100% /cover no-repeat;
   }
   .hero::after{
     content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg, rgba(10,10,10,.3) 0%, rgba(10,10,10,.38) 45%, rgba(10,10,10,.6) 75%, rgba(10,10,10,.9) 100%);
+    background:linear-gradient(90deg, rgba(10,10,10,.5) 0%, rgba(10,10,10,.22) 45%, rgba(10,10,10,0) 70%),
+      linear-gradient(180deg, rgba(10,10,10,.3) 0%, rgba(10,10,10,.38) 45%, rgba(10,10,10,.6) 75%, rgba(10,10,10,.9) 100%);
   }
-  .hero-inner{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;}
-  .hero h1{font-size:clamp(52px, 8.5vw, 124px);max-width:900px;text-shadow:0 2px 28px rgba(0,0,0,.35);}
+  .hero-inner{position:relative;z-index:2;text-align:left;display:flex;flex-direction:column;align-items:flex-start;max-width:none;margin:0;padding:0 clamp(24px,5vw,96px);}
+  .hero h1{font-size:clamp(52px, 7vw, 108px);max-width:900px;text-shadow:0 2px 28px rgba(0,0,0,.35);}
   .hero h1 em{font-style:normal;color:var(--accent);text-shadow:0 2px 22px rgba(0,0,0,.6);}
   .hero-sub{font-size:19px;line-height:1.65;color:var(--off-white);max-width:560px;margin:26px 0 34px;text-shadow:0 1px 14px rgba(0,0,0,.7);}
-  .hero-ctas{display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .hero-ctas{display:flex;flex-direction:column;align-items:flex-start;gap:16px;}
 
   /* ---------------- SECTION SHELL ---------------- */
   section{position:relative;padding:80px 0;}
@@ -379,6 +378,9 @@
     .photo-tile{aspect-ratio:4/3;}
     .contact .wrap{grid-template-columns:1fr;}
   }
+  @media (max-width:700px){
+    .hero{aspect-ratio:auto;min-height:100svh;justify-content:flex-end;padding:96px 0 56px;}
+  }
   @media (max-width:560px){
     .wrap{padding:0 20px;}
     section{padding:80px 0;}
@@ -506,22 +508,22 @@
       <div class="t-card">
         <span class="stars">★★★★★</span>
         <p>"I've been to a few gyms over the years, but this CrossFit gym is honestly in a league of its own. From day one, I felt completely welcomed—no cliques, no egos, just genuinely kind people who want to see you do well. The coaches are incredible. They're not only knowledgeable and attentive, but they actually care."</p>
-        <div class="t-who"><div class="t-avatar">S</div><span>Sarah Dillon</span></div>
+        <div class="t-who"><div class="t-avatar">S</div><span>Sarah D.</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
         <p>"I would give this place 6 stars out of 5 if I could! I am loving my experience training with Gabriel and his crew. Such a fun environment, we all have a laugh, and I leave every session exhausted and stronger."</p>
-        <div class="t-who"><div class="t-avatar">F</div><span>Frankie C</span></div>
+        <div class="t-who"><div class="t-avatar">F</div><span>Frankie C.</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
         <p>"This CF gym isn't just about the workouts, the people are genuinely awesome. The members and the coaches are what makes it a community. I've learned so much and gained so much in strength and fitness. You are supported no matter what level you are at. Thanks for creating something special Gab and the MT crew"</p>
-        <div class="t-who"><div class="t-avatar">T</div><span>Tiff Lockyer</span></div>
+        <div class="t-who"><div class="t-avatar">T</div><span>Tiff L.</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
         <p>"Love the Metal Therapy crew! Gab's focus on technique provided with a fantastic foundation to my CrossFit journey. I've continued to improve since, with tremendous support from the community. Highly recommend"</p>
-        <div class="t-who"><div class="t-avatar">M</div><span>Michael Leroy</span></div>
+        <div class="t-who"><div class="t-avatar">M</div><span>Michael L.</span></div>
       </div>
     </div>
   </div>
