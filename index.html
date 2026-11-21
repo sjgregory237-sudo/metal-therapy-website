@@ -168,20 +168,22 @@
     background:#0A0A0A;
     overflow:hidden;
   }
+  /* Photo is sized so its focal point (the MT logo / gap in the wall stripes, ~55.5% across)
+     sits dead centre behind the headline, with the logo kept at the top of the frame. */
   .hero::before{
-    content:"";position:absolute;inset:0;z-index:0;
-    background:url('hero-team.jpg') center 60% /cover no-repeat;
-    filter:contrast(1.12) saturate(1.18) brightness(1.04);
-    transform:scale(1.01);
+    content:"";position:absolute;z-index:0;top:0;bottom:0;left:50%;
+    aspect-ratio:2000/1377;min-width:113%;
+    transform:translateX(-55.5%);
+    background:url('hero-team.jpg') 55.5% 0% /cover no-repeat;
   }
   .hero::after{
     content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg, rgba(10,10,10,.4) 0%, rgba(10,10,10,.6) 55%, rgba(10,10,10,.94) 100%);
+    background:linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.18) 45%, rgba(10,10,10,.55) 78%, rgba(10,10,10,.85) 100%);
   }
   .hero-inner{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;}
-  .hero h1{font-size:clamp(58px, 11vw, 158px);max-width:900px;}
-  .hero h1 em{font-style:normal;color:var(--accent);}
-  .hero-sub{font-size:19px;line-height:1.65;color:var(--muted);max-width:560px;margin:26px 0 34px;}
+  .hero h1{font-size:clamp(52px, 8.5vw, 124px);max-width:900px;text-shadow:0 2px 28px rgba(0,0,0,.35);}
+  .hero h1 em{font-style:normal;color:var(--accent);text-shadow:0 2px 22px rgba(0,0,0,.6);}
+  .hero-sub{font-size:19px;line-height:1.65;color:var(--off-white);max-width:560px;margin:26px 0 34px;text-shadow:0 1px 14px rgba(0,0,0,.7);}
   .hero-ctas{display:flex;flex-direction:column;align-items:center;gap:16px;}
 
   /* ---------------- SECTION SHELL ---------------- */
@@ -242,6 +244,7 @@
   .rating-badge .stars{color:var(--accent);letter-spacing:2px;}
   .rating-badge b{color:var(--off-white);}
   .testimonial-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .testimonial-grid .t-card:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc(50% - 12px);}
   .t-card{background:var(--card);border:1px solid var(--line);padding:34px;text-align:left;}
   .t-card .stars{color:var(--accent);letter-spacing:2px;font-size:14px;margin-bottom:18px;display:block;}
   .t-card p{font-style:italic;color:var(--muted);font-size:15.5px;line-height:1.75;margin-bottom:24px;}
@@ -369,6 +372,7 @@
     .features{grid-template-columns:repeat(2,1fr);}
     .pain-grid{grid-template-columns:repeat(2,1fr);}
     .testimonial-grid{grid-template-columns:1fr;}
+    .testimonial-grid .t-card:last-child:nth-child(odd){width:auto;}
     .coach-grid{grid-template-columns:repeat(2,1fr);}
     .photo-tiles{grid-template-columns:repeat(2,1fr);}
     .photo-tile{aspect-ratio:4/3;}
@@ -496,27 +500,27 @@
     <div class="section-head" style="margin-left:auto;margin-right:auto;">
       <h2>TRUSTED IN<em>THE COMMUNITY</em></h2>
     </div>
-    <div class="rating-badge"><span class="stars">★★★★★</span> <b>5.0</b> on Google</div>
+    <div class="rating-badge"><span class="stars">★★★★★</span> <b>5.0</b> on Google · <b>100 reviews</b></div>
     <div class="testimonial-grid">
       <div class="t-card">
         <span class="stars">★★★★★</span>
-        <p>"The most welcoming gym I've ever been to. The coaching is top-tier and the community is even better."</p>
-        <div class="t-who"><div class="t-avatar">S</div><span>Sarah M.</span></div>
+        <p>"I've been to a few gyms over the years, but this CrossFit gym is honestly in a league of its own. From day one, I felt completely welcomed—no cliques, no egos, just genuinely kind people who want to see you do well. The coaches are incredible. They're not only knowledgeable and attentive, but they actually care."</p>
+        <div class="t-who"><div class="t-avatar">S</div><span>Sarah Dillon</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
-        <p>"Metal Therapy changed how I view fitness. It's about mental strength as much as the physical."</p>
-        <div class="t-who"><div class="t-avatar">J</div><span>James R.</span></div>
+        <p>"I would give this place 6 stars out of 5 if I could! I am loving my experience training with Gabriel and his crew. Such a fun environment, we all have a laugh, and I leave every session exhausted and stronger."</p>
+        <div class="t-who"><div class="t-avatar">F</div><span>Frankie C</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
-        <p>"Every class pushes me further than I'd push myself, and I've never once felt intimidated walking in the door."</p>
-        <div class="t-who"><div class="t-avatar">E</div><span>Emma T.</span></div>
+        <p>"This CF gym isn't just about the workouts, the people are genuinely awesome. The members and the coaches are what makes it a community. I've learned so much and gained so much in strength and fitness. You are supported no matter what level you are at. Thanks for creating something special Gab and the MT crew"</p>
+        <div class="t-who"><div class="t-avatar">T</div><span>Tiff Lockyer</span></div>
       </div>
       <div class="t-card">
         <span class="stars">★★★★★</span>
-        <p>"Ten years of training and this is the first program that's actually kept me consistent. The coaching keeps you honest."</p>
-        <div class="t-who"><div class="t-avatar">M</div><span>Marcus L.</span></div>
+        <p>"Love the Metal Therapy crew! Gab's focus on technique provided with a fantastic foundation to my CrossFit journey. I've continued to improve since, with tremendous support from the community. Highly recommend"</p>
+        <div class="t-who"><div class="t-avatar">M</div><span>Michael Leroy</span></div>
       </div>
     </div>
   </div>
