@@ -378,20 +378,19 @@
     .photo-tile{aspect-ratio:4/3;}
     .contact .wrap{grid-template-columns:1fr;}
   }
-  /* Phones: text sits up top, and the photo runs full-width underneath so the whole group is visible. */
+  /* Phones: full-screen photo with the headline up on the wall above the group.
+     hero-mobile.jpg is the same photo with the logo removed and extra wall added on top. */
   @media (max-width:700px){
-    .hero{aspect-ratio:auto;min-height:0;justify-content:flex-start;padding:92px 0 0;}
-    .hero-inner{order:1;}
-    .hero h1{font-size:min(17vw,72px);}
-    .hero-sub{font-size:17px;margin:20px 0 28px;}
+    .hero{aspect-ratio:auto;min-height:100svh;justify-content:flex-start;padding:92px 0 48px;}
     .hero::before{
-      order:2;position:relative;inset:auto;width:100%;aspect-ratio:2.02;margin-top:36px;
-      background-size:cover;background-position:50% 100%;
+      inset:0;top:0;
+      background:url('hero-mobile.jpg') 60% 100% /cover no-repeat;
     }
     .hero::after{
-      inset:auto;left:0;right:0;bottom:0;height:calc(100vw / 2.02);
-      background:linear-gradient(180deg, #0A0A0A 0%, rgba(10,10,10,0) 30%, rgba(10,10,10,.1) 70%, rgba(10,10,10,.8) 100%);
+      background:linear-gradient(180deg, rgba(10,10,10,.55) 0%, rgba(10,10,10,.3) 38%, rgba(10,10,10,.35) 70%, rgba(10,10,10,.85) 100%);
     }
+    .hero h1{font-size:min(17vw,72px);}
+    .hero-sub{font-size:17px;margin:20px 0 28px;}
   }
   @media (max-width:560px){
     .wrap{padding:0 20px;}
