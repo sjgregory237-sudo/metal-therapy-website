@@ -1,0 +1,41 @@
+# Redirects from the old Squarespace site's URLs to the closest page on this site.
+# Keeps Google results, bookmarks and shared links working after the move.
+# (/timetable exists on both sites, so it needs no rule.)
+
+[[redirects]]
+  from = "/memberships"
+  to = "/#offer"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/join"
+  to = "/#trial"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/free-trial"
+  to = "/#trial"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contact"
+  to = "/#contact"
+  status = 301
+  force = true
+
+# The old Journal (member of the month, throwdown posts). Temporary (302) until the new Journal
+# is built, so search engines don't treat the home page as the permanent replacement.
+[[redirects]]
+  from = "/journal"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/journal/*"
+  to = "/"
+  status = 302
+  force = true
