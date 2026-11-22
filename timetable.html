@@ -170,6 +170,31 @@
     padding-top:24px;margin-top:24px;border-top:1px solid var(--line);
   }
 
+  /* ---------------- TIMETABLE: PHONE VIEW (day tabs, built from the table by script) ---------------- */
+  .tt-mobile{display:none;}
+  .tt-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:26px;}
+  .tt-tab{
+    position:relative;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+    padding:13px 0;border:1px solid var(--line);background:transparent;color:var(--muted);
+    border-radius:2px;cursor:pointer;
+  }
+  .tt-tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#0E1B22;font-weight:600;}
+  .tt-tab.is-today::after{content:"";position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:currentColor;}
+  .tt-day-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px;}
+  .tt-day-head h2{font-size:38px;}
+  .tt-day-head span{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+  .tt-group{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:22px 0 12px;}
+  .tt-item{display:grid;grid-template-columns:82px 1fr;gap:14px;align-items:center;margin-bottom:10px;}
+  .tt-time{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;}
+  .tt-item .class-tag{height:auto;min-height:58px;font-size:15px;padding:10px 14px;}
+  .tt-empty{font-family:var(--mono);font-size:13px;color:var(--faint);padding:26px 0;}
+  .tt-mobile-cta{margin-top:30px;}
+  .tt-mobile-cta .btn{width:100%;justify-content:center;}
+  @media (max-width:700px){
+    .tt-mobile-on .tt-scroll{display:none;}
+    .tt-mobile-on .tt-mobile{display:block;}
+  }
+
   @media (max-width:980px){
     .navlinks{display:none;}
     .burger{display:block;}
@@ -225,6 +250,7 @@
 
 <section class="tt-section">
   <div class="wrap">
+    <div class="tt-mobile" id="ttMobile"></div>
     <div class="tt-scroll">
       <table>
         <colgroup>
@@ -378,6 +404,81 @@
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape' && navlinksEl.classList.contains('open')) closeBurgerMenu();
   });
+
+  // phone timetable: one day at a time, built from the table above so there is only one place to edit
+  (function(){
+    const table = document.querySelector('.tt-scroll table');
+    const host = document.getElementById('ttMobile');
+    if(!table || !host) return;
+    const days = Array.from(table.querySelectorAll('thead th')).slice(1).map(th => th.textContent.trim());
+    const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => {
+      const cells = Array.from(tr.children);
+      return {
+        time: cells[0].textContent.trim(),
+        classes: cells.slice(1).map(td => {
+          const tag = td.querySelector('.class-tag');
+          return tag ? {cls: tag.className.replace('class-tag','').trim(), html: tag.innerHTML} : null;
+        })
+      };
+    });
+    const todayName = new Intl.DateTimeFormat('en-AU', {weekday:'long', timeZone:'Australia/Melbourne'}).format(new Date());
+    const todayIdx = days.indexOf(todayName);
+    let current = todayIdx >= 0 ? todayIdx : 0;
+
+    const tabs = document.createElement('div');
+    tabs.className = 'tt-tabs';
+    tabs.setAttribute('role','tablist');
+    tabs.setAttribute('aria-label','Choose a day');
+    const panel = document.createElement('div');
+    panel.setAttribute('role','tabpanel');
+    panel.setAttribute('aria-live','polite');
+
+    const buttons = days.map((d, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tt-tab' + (i === todayIdx ? ' is-today' : '');
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label', d + (i === todayIdx ? ' (today)' : ''));
+      b.textContent = d.slice(0,3);
+      b.addEventListener('click', () => select(i));
+      b.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowRight'){ select((current+1) % days.length); buttons[current].focus(); }
+        if(e.key === 'ArrowLeft'){ select((current+days.length-1) % days.length); buttons[current].focus(); }
+      });
+      tabs.appendChild(b);
+      return b;
+    });
+
+    function select(i){
+      current = i;
+      buttons.forEach((b, j) => {
+        b.setAttribute('aria-selected', j === i ? 'true' : 'false');
+        b.tabIndex = j === i ? 0 : -1;
+      });
+      const items = rows.filter(r => r.classes[i]);
+      let html = '<div class="tt-day-head"><h2>' + days[i] + '</h2>' + (i === todayIdx ? '<span>Today</span>' : '') + '</div>';
+      if(!items.length){
+        html += '<p class="tt-empty">No classes on ' + days[i] + '.</p>';
+      } else {
+        let group = '';
+        items.forEach(r => {
+          const g = /AM/i.test(r.time) ? 'Morning' : 'Evening';
+          if(g !== group){ html += '<p class="tt-group">' + g + '</p>'; group = g; }
+          const c = r.classes[i];
+          html += '<div class="tt-item"><div class="tt-time">' + r.time + '</div><div class="class-tag ' + c.cls + '">' + c.html + '</div></div>';
+        });
+      }
+      panel.innerHTML = html;
+    }
+
+    const cta = document.createElement('div');
+    cta.className = 'tt-mobile-cta';
+    cta.innerHTML = '<a href="index.html#trial" class="btn primary">Start your 7 day free trial</a>';
+
+    host.append(tabs, panel, cta);
+    select(current);
+    document.querySelector('.tt-section').classList.add('tt-mobile-on');
+  })();
 </script>
 
 </body>
